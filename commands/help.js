@@ -177,23 +177,16 @@ Join our channel for updates:`;
 }, { quoted: message });
         } else {
             console.error('Bot image not found at:', imagePath);
-            await sock.sendMessage(chatId, { 
-                text: helpMessage,
-                contextInfo: {
-                    forwardingScore: 1,
-                    isForwarded: true,
-                    forwardedNewsletterMessageInfo: {
-                        newsletterJid: '120363161513685998@newsletter',
-                        newsletterName: 'KnightBot MD by Mr Unique Hacker',
-                        serverMessageId: -1
-                    } 
-                }
-            });
-        }
-    } catch (error) {
-        console.error('Error in help command:', error);
-        await sock.sendMessage(chatId, { text: helpMessage });
+await sock.sendMessage(chatId, { 
+    text: helpMessage,
+    contextInfo: {
+        forwardingScore: 1,
+        isForwarded: true,
+        forwardedNewsletterMessageInfo: {
+            newsletterJid: '0029VarfjW04tRrmwfb8x306@newsletter', // ✅ Your Channel JID
+            newsletterName: 'Arslan-MD Official Channel',         // ✅ Your Channel Name
+            serverMessageId: -1
+        } 
     }
-}
-
+        
 module.exports = helpCommand;
