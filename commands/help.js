@@ -5,9 +5,9 @@ const path = require('path');
 async function helpCommand(sock, chatId, message) {
     const helpMessage = `
 ╔═══════════════════╗
-   *🤖 ${settings.botName || 'KnightBot-MD'}*  
+   *🤖 ${settings.botName || 'Arslan-MD'}*  
    Version: *${settings.version || '2.0.2'}*
-   by ${settings.botOwner || 'Mr Unique Hacker'}
+   by ${settings.botOwner || 'ArslanMD Official'}
    YT : ${global.ytch}
 ╚═══════════════════╝
 
@@ -153,8 +153,9 @@ async function helpCommand(sock, chatId, message) {
 ║ ➤ .script
 ║ ➤ .repo
 ╚═══════════════════╝
-
-Join our channel for updates:`;
+Join our channel for updates:
+🔗 https://whatsapp.com/channel/0029VarfjW04tRrmwfb8x306
+`;
 
     try {
         const imagePath = path.join(__dirname, '../assets/bot_image.jpg');
@@ -163,30 +164,38 @@ Join our channel for updates:`;
             const imageBuffer = fs.readFileSync(imagePath);
             
             await sock.sendMessage(chatId, {
-    image: imageBuffer,
-    caption: helpMessage,
-    contextInfo: {
-        forwardingScore: 1,
-        isForwarded: true,
-        forwardedNewsletterMessageInfo: {
-            newsletterJid: '0029VarfjW04tRrmwfb8x306@newsletter', // ✅ YOUR CHANNEL JID
-            newsletterName: 'Arslan-MD Channel', // ✅ YOUR CHANNEL NAME
-            serverMessageId: -1
-        }
-    }
-}, { quoted: message });
+                image: imageBuffer,
+                caption: helpMessage,
+                contextInfo: {
+                    forwardingScore: 1,
+                    isForwarded: true,
+                    forwardedNewsletterMessageInfo: {
+                        newsletterJid: '0029VarfjW04tRrmwfb8x306@newsletter',
+                        newsletterName: 'Arslan-MD Channel',
+                        serverMessageId: -1
+                    }
+                }
+            }, { quoted: message });
         } else {
             console.error('Bot image not found at:', imagePath);
-await sock.sendMessage(chatId, { 
-    text: helpMessage,
-    contextInfo: {
-        forwardingScore: 1,
-        isForwarded: true,
-        forwardedNewsletterMessageInfo: {
-            newsletterJid: '0029VarfjW04tRrmwfb8x306@newsletter', // ✅ Your Channel JID
-            newsletterName: 'Arslan-MD Official Channel',         // ✅ Your Channel Name
-            serverMessageId: -1
-        } 
+
+            await sock.sendMessage(chatId, { 
+                text: helpMessage,
+                contextInfo: {
+                    forwardingScore: 1,
+                    isForwarded: true,
+                    forwardedNewsletterMessageInfo: {
+                        newsletterJid: '0029VarfjW04tRrmwfb8x306@newsletter',
+                        newsletterName: 'Arslan-MD Official Channel',
+                        serverMessageId: -1
+                    } 
+                }
+            });
+        }
+    } catch (error) {
+        console.error('Error in help command:', error);
+        await sock.sendMessage(chatId, { text: helpMessage });
     }
-        
+}
+
 module.exports = helpCommand;
