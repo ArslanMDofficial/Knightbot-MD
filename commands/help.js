@@ -45,5 +45,4 @@ try {
     }
 }
 
-module.exports = helpComman
-
+module.exports = helpCommand;
