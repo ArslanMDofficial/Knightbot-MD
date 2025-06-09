@@ -25,6 +25,25 @@ Available Commands:
 ╔═══════════════════╗ 📥 Downloader: ║ ➤ .play <song_name> ║ ➤ .song <song_name> ║ ➤ .instagram <link> ║ ➤ .facebook <link> ║ ➤ .tiktok <link> ╚═══════════════════╝
 
 ╔═══════════════════╗ 💻 Github Commands: ║ ➤ .git ║ ➤ .github ║ ➤ .sc ║ ➤ .script ║ ➤ .repo ╚═══════════════════╝ `;
+;
+try {
+        const imagePath = path.join(__dirname, '../assets/bot_image.jpg');
 
-module.exports = helpCommand;
+        if (fs.existsSync(imagePath)) {
+            const imageBuffer = fs.readFileSync(imagePath);
+            await sock.sendMessage(chatId, {
+                image: imageBuffer,
+                caption: helpMessage
+            }, { quoted: message });
+        } else {
+            console.error('Bot image not found at:', imagePath);
+            await sock.sendMessage(chatId, { text: helpMessage }, { quoted: message });
+        }
+    } catch (error) {
+        console.error('Error in help command:', error);
+        await sock.sendMessage(chatId, { text: helpMessage });
+    }
+}
+
+module.exports = helpComman
 
