@@ -2,7 +2,7 @@ const settings = require('../settings'); const fs = require('fs'); const path = 
 
 async function helpCommand(sock, chatId, message) { const helpMessage = ` ╔═══════════════════╗ 🤖 ${settings.botName || 'Arslan-MD'}
 Version: ${settings.version || '2.0.2'}
-by ${settings.botOwner || 'ArslanMD Official'} YT : ${global.ytch || 'Not Set'} ╚═══════════════════╝
+by ${settings.botOwner || 'ArslanMD Official'} YT : ${global.ytch || 'youtube.com/@ArslanMD'} ╚═══════════════════╝
 
 Available Commands:
 
@@ -24,36 +24,43 @@ Available Commands:
 
 ╔═══════════════════╗ 📥 Downloader: ║ ➤ .play <song_name> ║ ➤ .song <song_name> ║ ➤ .instagram <link> ║ ➤ .facebook <link> ║ ➤ .tiktok <link> ╚═══════════════════╝
 
-╔═══════════════════╗ 💻 Github Commands: ║ ➤ .git ║ ➤ .github ║ ➤ .sc ║ ➤ .script ║ ➤ .repo ╚═══════════════════╝
-
-Join our official channel for updates below 👇👇 `;
-
+╔═══════════════════╗ 💻 Github Commands: ║ ➤ .git ║ ➤ .github ║ ➤ .sc ║ ➤ .script ║ ➤ .repo ╚═══════════════════╝ `;
 try {
     const imagePath = path.join(__dirname, '../assets/bot_image.jpg');
-    let imageBuffer;
 
     if (fs.existsSync(imagePath)) {
-        imageBuffer = fs.readFileSync(imagePath);
-    }
+        const imageBuffer = fs.readFileSync(imagePath);
 
-    await sock.sendMessage(chatId, {
-        image: imageBuffer || undefined,
-        caption: helpMessage,
-        contextInfo: {
-            forwardingScore: 1,
-            isForwarded: true,
-            externalAdReply: {
-                title: 'Arslan-MD Official Channel',
-                body: 'Click to join the channel for updates and features!',
-                thumbnail: imageBuffer || undefined,
-                mediaType: 1,
-                renderLargerThumbnail: true,
-                mediaUrl: 'https://whatsapp.com/channel/0029VarfjW04tRrmwfb8x306',
-                sourceUrl: 'https://whatsapp.com/channel/0029VarfjW04tRrmwfb8x306'
+        await sock.sendMessage(chatId, {
+            image: imageBuffer,
+            caption: helpMessage,
+            contextInfo: {
+                externalAdReply: {
+                    title: 'Arslan-MD Official Channel',
+                    body: 'Join for latest updates and commands!',
+                    mediaType: 1,
+                    renderLargerThumbnail: true,
+                    thumbnail: imageBuffer,
+                    showAdAttribution: true,
+                    sourceUrl: 'https://whatsapp.com/channel/0029VarfjW04tRrmwfb8x306'
+                }
             }
-        }
-    }, { quoted: message });
-
+        }, { quoted: message });
+    } else {
+        await sock.sendMessage(chatId, {
+            text: helpMessage,
+            contextInfo: {
+                externalAdReply: {
+                    title: 'Arslan-MD Official Channel',
+                    body: 'Join for latest updates and commands!',
+                    mediaType: 1,
+                    renderLargerThumbnail: true,
+                    showAdAttribution: true,
+                    sourceUrl: 'https://whatsapp.com/channel/0029VarfjW04tRrmwfb8x306'
+                }
+            }
+        }, { quoted: message });
+    }
 } catch (error) {
     console.error('Error in help command:', error);
     await sock.sendMessage(chatId, { text: helpMessage });
