@@ -163,18 +163,18 @@ Join our channel for updates:`;
             const imageBuffer = fs.readFileSync(imagePath);
             
             await sock.sendMessage(chatId, {
-                image: imageBuffer,
-                caption: helpMessage,
-                contextInfo: {
-                    forwardingScore: 1,
-                    isForwarded: true,
-                    forwardedNewsletterMessageInfo: {
-                        newsletterJid: '120363161513685998@newsletter',
-                        newsletterName: 'KnightBot MD',
-                        serverMessageId: -1
-                    }
-                }
-            },{ quoted: message });
+    image: imageBuffer,
+    caption: helpMessage,
+    contextInfo: {
+        forwardingScore: 1,
+        isForwarded: true,
+        forwardedNewsletterMessageInfo: {
+            newsletterJid: '0029VarfjW04tRrmwfb8x306@newsletter', // ✅ YOUR CHANNEL JID
+            newsletterName: 'Arslan-MD Channel', // ✅ YOUR CHANNEL NAME
+            serverMessageId: -1
+        }
+    }
+}, { quoted: message });
         } else {
             console.error('Bot image not found at:', imagePath);
             await sock.sendMessage(chatId, { 
