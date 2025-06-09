@@ -1,201 +1,65 @@
-const settings = require('../settings');
-const fs = require('fs');
-const path = require('path');
+const settings = require('../settings'); const fs = require('fs'); const path = require('path');
 
-async function helpCommand(sock, chatId, message) {
-    const helpMessage = `
-╔═══════════════════╗
-   *🤖 ${settings.botName || 'Arslan-MD'}*  
-   Version: *${settings.version || '2.0.2'}*
-   by ${settings.botOwner || 'ArslanMD Official'}
-   YT : ${global.ytch}
-╚═══════════════════╝
+async function helpCommand(sock, chatId, message) { const helpMessage = ` ╔═══════════════════╗ 🤖 ${settings.botName || 'Arslan-MD'}
+Version: ${settings.version || '2.0.2'}
+by ${settings.botOwner || 'ArslanMD Official'} YT : ${global.ytch || 'Not Set'} ╚═══════════════════╝
 
-*Available Commands:*
+Available Commands:
 
-╔═══════════════════╗
-🌐 *General Commands*:
-║ ➤ .help or .menu
-║ ➤ .ping
-║ ➤ .alive
-║ ➤ .tts <text>
-║ ➤ .owner
-║ ➤ .joke
-║ ➤ .quote
-║ ➤ .fact
-║ ➤ .weather <city>
-║ ➤ .news
-║ ➤ .attp <text>
-║ ➤ .lyrics <song_title>
-║ ➤ .8ball <question>
-║ ➤ .groupinfo
-║ ➤ .staff or .admins 
-║ ➤ .vv
-║ ➤ .trt <text> <lang>
-║ ➤ .ss <link>
-║ ➤ .jid
-╚═══════════════════╝ 
+╔═══════════════════╗ 🌐 General Commands: ║ ➤ .help or .menu ║ ➤ .ping ║ ➤ .alive ║ ➤ .tts <text> ║ ➤ .owner ║ ➤ .joke ║ ➤ .quote ║ ➤ .fact ║ ➤ .weather <city> ║ ➤ .news ║ ➤ .attp <text> ║ ➤ .lyrics <song_title> ║ ➤ .8ball <question> ║ ➤ .groupinfo ║ ➤ .staff or .admins ║ ➤ .vv ║ ➤ .trt <text> <lang> ║ ➤ .ss <link> ║ ➤ .jid ╚═══════════════════╝
 
-╔═══════════════════╗
-👮‍♂️ *Admin Commands*:
-║ ➤ .ban @user
-║ ➤ .promote @user
-║ ➤ .demote @user
-║ ➤ .mute <minutes>
-║ ➤ .unmute
-║ ➤ .delete or .del
-║ ➤ .kick @user
-║ ➤ .warnings @user
-║ ➤ .warn @user
-║ ➤ .antilink
-║ ➤ .antibadword
-║ ➤ .clear
-║ ➤ .tag <message>
-║ ➤ .tagall
-║ ➤ .chatbot
-║ ➤ .resetlink
-║ ➤ .welcome <on/off>
-║ ➤ .goodbye <on/off>
-╚═══════════════════╝
+╔═══════════════════╗ 👮‍♂️ Admin Commands: ║ ➤ .ban @user ║ ➤ .promote @user ║ ➤ .demote @user ║ ➤ .mute <minutes> ║ ➤ .unmute ║ ➤ .delete or .del ║ ➤ .kick @user ║ ➤ .warnings @user ║ ➤ .warn @user ║ ➤ .antilink ║ ➤ .antibadword ║ ➤ .clear ║ ➤ .tag <message> ║ ➤ .tagall ║ ➤ .chatbot ║ ➤ .resetlink ║ ➤ .welcome <on/off> ║ ➤ .goodbye <on/off> ╚═══════════════════╝
 
-╔═══════════════════╗
-🔒 *Owner Commands*:
-║ ➤ .mode
-║ ➤ .autostatus
-║ ➤ .clearsession
-║ ➤ .antidelete
-║ ➤ .cleartmp
-║ ➤ .setpp <reply to image>
-║ ➤ .autoreact
-╚═══════════════════╝
+╔═══════════════════╗ 🔒 Owner Commands: ║ ➤ .mode ║ ➤ .autostatus ║ ➤ .clearsession ║ ➤ .antidelete ║ ➤ .cleartmp ║ ➤ .setpp <reply to image> ║ ➤ .autoreact ╚═══════════════════╝
 
-╔═══════════════════╗
-🎨 *Image/Sticker Commands*:
-║ ➤ .blur <image>
-║ ➤ .simage <reply to sticker>
-║ ➤ .sticker <reply to image>
-║ ➤ .tgsticker <Link>
-║ ➤ .meme
-║ ➤ .take <packname> 
-║ ➤ .emojimix <emj1>+<emj2>
-╚═══════════════════╝  
+╔═══════════════════╗ 🎨 Image/Sticker Commands: ║ ➤ .blur <image> ║ ➤ .simage <reply to sticker> ║ ➤ .sticker <reply to image> ║ ➤ .tgsticker <Link> ║ ➤ .meme ║ ➤ .take <packname> ║ ➤ .emojimix <emj1>+<emj2> ╚═══════════════════╝
 
-╔═══════════════════╗
-🎮 *Game Commands*:
-║ ➤ .tictactoe @user
-║ ➤ .hangman
-║ ➤ .guess <letter>
-║ ➤ .trivia
-║ ➤ .answer <answer>
-║ ➤ .truth
-║ ➤ .dare
-╚═══════════════════╝
+╔═══════════════════╗ 🎮 Game Commands: ║ ➤ .tictactoe @user ║ ➤ .hangman ║ ➤ .guess <letter> ║ ➤ .trivia ║ ➤ .answer <answer> ║ ➤ .truth ║ ➤ .dare ╚═══════════════════╝
 
-╔═══════════════════╗
-🤖 *AI Commands*:
-║ ➤ .gpt <question>
-║ ➤ .gemini <question>
-║ ➤ .imagine <prompt>
-║ ➤ .flux <prompt>
-╚═══════════════════╝
+╔═══════════════════╗ 🤖 AI Commands: ║ ➤ .gpt <question> ║ ➤ .gemini <question> ║ ➤ .imagine <prompt> ║ ➤ .flux <prompt> ╚═══════════════════╝
 
-╔═══════════════════╗
-🎯 *Fun Commands*:
-║ ➤ .compliment @user
-║ ➤ .insult @user
-║ ➤ .flirt 
-║ ➤ .shayari
-║ ➤ .goodnight
-║ ➤ .roseday
-║ ➤ .character @user
-║ ➤ .wasted @user
-║ ➤ .ship @user
-║ ➤ .simp @user
-║ ➤ .stupid @user [text]
-╚═══════════════════╝
+╔═══════════════════╗ 🎯 Fun Commands: ║ ➤ .compliment @user ║ ➤ .insult @user ║ ➤ .flirt ║ ➤ .shayari ║ ➤ .goodnight ║ ➤ .roseday ║ ➤ .character @user ║ ➤ .wasted @user ║ ➤ .ship @user ║ ➤ .simp @user ║ ➤ .stupid @user [text] ╚═══════════════════╝
 
-╔═══════════════════╗
-🔤 *Textmaker*:
-║ ➤ .metallic <text>
-║ ➤ .ice <text>
-║ ➤ .snow <text>
-║ ➤ .impressive <text>
-║ ➤ .matrix <text>
-║ ➤ .light <text>
-║ ➤ .neon <text>
-║ ➤ .devil <text>
-║ ➤ .purple <text>
-║ ➤ .thunder <text>
-║ ➤ .leaves <text>
-║ ➤ .1917 <text>
-║ ➤ .arena <text>
-║ ➤ .hacker <text>
-║ ➤ .sand <text>
-║ ➤ .blackpink <text>
-║ ➤ .glitch <text>
-║ ➤ .fire <text>
-╚═══════════════════╝
+╔═══════════════════╗ 🔤 Textmaker: ║ ➤ .metallic <text> ║ ➤ .ice <text> ║ ➤ .snow <text> ║ ➤ .impressive <text> ║ ➤ .matrix <text> ║ ➤ .light <text> ║ ➤ .neon <text> ║ ➤ .devil <text> ║ ➤ .purple <text> ║ ➤ .thunder <text> ║ ➤ .leaves <text> ║ ➤ .1917 <text> ║ ➤ .arena <text> ║ ➤ .hacker <text> ║ ➤ .sand <text> ║ ➤ .blackpink <text> ║ ➤ .glitch <text> ║ ➤ .fire <text> ╚═══════════════════╝
 
-╔═══════════════════╗
-📥 *Downloader*:
-║ ➤ .play <song_name>
-║ ➤ .song <song_name>
-║ ➤ .instagram <link>
-║ ➤ .facebook <link>
-║ ➤ .tiktok <link>
-╚═══════════════════╝
+╔═══════════════════╗ 📥 Downloader: ║ ➤ .play <song_name> ║ ➤ .song <song_name> ║ ➤ .instagram <link> ║ ➤ .facebook <link> ║ ➤ .tiktok <link> ╚═══════════════════╝
 
-╔═══════════════════╗
-💻 *Github Commands:*
-║ ➤ .git
-║ ➤ .github
-║ ➤ .sc
-║ ➤ .script
-║ ➤ .repo
-╚═══════════════════╝
-Join our channel for updates:
-🔗 https://whatsapp.com/channel/0029VarfjW04tRrmwfb8x306
-`;
+╔═══════════════════╗ 💻 Github Commands: ║ ➤ .git ║ ➤ .github ║ ➤ .sc ║ ➤ .script ║ ➤ .repo ╚═══════════════════╝
 
-    try {
-        const imagePath = path.join(__dirname, '../assets/bot_image.jpg');
-        
-        if (fs.existsSync(imagePath)) {
-            const imageBuffer = fs.readFileSync(imagePath);
-            
-            await sock.sendMessage(chatId, {
-                image: imageBuffer,
-                caption: helpMessage,
-                contextInfo: {
-                    forwardingScore: 1,
-                    isForwarded: true,
-                    forwardedNewsletterMessageInfo: {
-                        newsletterJid: '0029VarfjW04tRrmwfb8x306@newsletter',
-                        newsletterName: 'Arslan-MD Channel',
-                        serverMessageId: -1
-                    }
-                }
-            }, { quoted: message });
-        } else {
-            console.error('Bot image not found at:', imagePath);
+Join our official channel for updates below 👇👇 `;
 
-            await sock.sendMessage(chatId, { 
-                text: helpMessage,
-                contextInfo: {
-                    forwardingScore: 1,
-                    isForwarded: true,
-                    forwardedNewsletterMessageInfo: {
-                        newsletterJid: '0029VarfjW04tRrmwfb8x306@newsletter',
-                        newsletterName: 'Arslan-MD Official Channel',
-                        serverMessageId: -1
-                    } 
-                }
-            });
-        }
-    } catch (error) {
-        console.error('Error in help command:', error);
-        await sock.sendMessage(chatId, { text: helpMessage });
+try {
+    const imagePath = path.join(__dirname, '../assets/bot_image.jpg');
+    let imageBuffer;
+
+    if (fs.existsSync(imagePath)) {
+        imageBuffer = fs.readFileSync(imagePath);
     }
+
+    await sock.sendMessage(chatId, {
+        image: imageBuffer || undefined,
+        caption: helpMessage,
+        contextInfo: {
+            forwardingScore: 1,
+            isForwarded: true,
+            externalAdReply: {
+                title: 'Arslan-MD Official Channel',
+                body: 'Click to join the channel for updates and features!',
+                thumbnail: imageBuffer || undefined,
+                mediaType: 1,
+                renderLargerThumbnail: true,
+                mediaUrl: 'https://whatsapp.com/channel/0029VarfjW04tRrmwfb8x306',
+                sourceUrl: 'https://whatsapp.com/channel/0029VarfjW04tRrmwfb8x306'
+            }
+        }
+    }, { quoted: message });
+
+} catch (error) {
+    console.error('Error in help command:', error);
+    await sock.sendMessage(chatId, { text: helpMessage });
+}
+
 }
 
 module.exports = helpCommand;
+
