@@ -1,18 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 
-const channelInfo = {
-    contextInfo: {
-        forwardingScore: 1,
-        isForwarded: true,
-        forwardedNewsletterMessageInfo: {
-            newsletterJid: '120363161513685998@newsletter',
-            newsletterName: 'KnightBot MD',
-            serverMessageId: -1
-        }
-    }
-};
-
 // Path to store auto status configuration
 const configPath = path.join(__dirname, '../data/autoStatus.json');
 
@@ -26,8 +14,7 @@ async function autoStatusCommand(sock, chatId, msg, args) {
         // Check if sender is owner
         if (!msg.key.fromMe) {
             await sock.sendMessage(chatId, { 
-                text: '❌ This command can only be used by the owner!',
-                ...channelInfo
+                text: '❌ This command can only be used by the owner!'
             });
             return;
         }
@@ -39,8 +26,7 @@ async function autoStatusCommand(sock, chatId, msg, args) {
         if (!args || args.length === 0) {
             const status = config.enabled ? 'enabled' : 'disabled';
             await sock.sendMessage(chatId, { 
-                text: `🔄 *Auto Status View*\n\nCurrent status: ${status}\n\nUse:\n.autostatus on - Enable auto status view\n.autostatus off - Disable auto status view`,
-                ...channelInfo
+                text: `🔄 *Auto Status View*\n\nCurrent status: ${status}\n\nUse:\n.autostatus on - Enable auto status view\n.autostatus off - Disable auto status view`
             });
             return;
         }
@@ -51,28 +37,24 @@ async function autoStatusCommand(sock, chatId, msg, args) {
             config.enabled = true;
             fs.writeFileSync(configPath, JSON.stringify(config));
             await sock.sendMessage(chatId, { 
-                text: '✅ Auto status view has been enabled!\nBot will now automatically view all contact statuses.',
-                ...channelInfo
+                text: '✅ Auto status view has been enabled!\nBot will now automatically view all contact statuses.'
             });
         } else if (command === 'off') {
             config.enabled = false;
             fs.writeFileSync(configPath, JSON.stringify(config));
             await sock.sendMessage(chatId, { 
-                text: '❌ Auto status view has been disabled!\nBot will no longer automatically view statuses.',
-                ...channelInfo
+                text: '❌ Auto status view has been disabled!\nBot will no longer automatically view statuses.'
             });
         } else {
             await sock.sendMessage(chatId, { 
-                text: '❌ Invalid command! Use:\n.autostatus on - Enable auto status view\n.autostatus off - Disable auto status view',
-                ...channelInfo
+                text: '❌ Invalid command! Use:\n.autostatus on - Enable auto status view\n.autostatus off - Disable auto status view'
             });
         }
 
     } catch (error) {
         console.error('Error in autostatus command:', error);
         await sock.sendMessage(chatId, { 
-            text: '❌ Error occurred while managing auto status!\n' + error.message,
-            ...channelInfo
+            text: '❌ Error occurred while managing auto status!\n' + error.message
         });
     }
 }
@@ -95,17 +77,14 @@ async function handleStatusUpdate(sock, status) {
             return;
         }
 
-        // Add delay to prevent rate limiting
         await new Promise(resolve => setTimeout(resolve, 1000));
 
-        // Handle status from messages.upsert
         if (status.messages && status.messages.length > 0) {
             const msg = status.messages[0];
             if (msg.key && msg.key.remoteJid === 'status@broadcast') {
                 try {
                     await sock.readMessages([msg.key]);
                     const sender = msg.key.participant || msg.key.remoteJid;
-                   // console.log(`✅ Status Viewed `);
                 } catch (err) {
                     if (err.message?.includes('rate-overlimit')) {
                         console.log('⚠️ Rate limit hit, waiting before retrying...');
@@ -119,7 +98,6 @@ async function handleStatusUpdate(sock, status) {
             }
         }
 
-        // Handle direct status updates
         if (status.key && status.key.remoteJid === 'status@broadcast') {
             try {
                 await sock.readMessages([status.key]);
@@ -137,7 +115,6 @@ async function handleStatusUpdate(sock, status) {
             return;
         }
 
-        // Handle status in reactions
         if (status.reaction && status.reaction.key.remoteJid === 'status@broadcast') {
             try {
                 await sock.readMessages([status.reaction.key]);
@@ -163,4 +140,4 @@ async function handleStatusUpdate(sock, status) {
 module.exports = {
     autoStatusCommand,
     handleStatusUpdate
-}; 
+};
