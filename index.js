@@ -58,23 +58,25 @@ async function startBot() {
     sock.ev.on('connection.update', async (update) => {
         const { connection, lastDisconnect } = update
         console.log('Connection update:', connection)
-        if(lastDisconnect) {
-          console.log('Last disconnect reason:', lastDisconnect.error?.output?.statusCode, lastDisconnect.error?.message)
+        if (lastDisconnect) {
+            console.log('Last disconnect reason:', lastDisconnect.error?.output?.statusCode, lastDisconnect.error?.message)
         }
         if (connection === 'open') {
             console.log(chalk.green(`🤖 Bot Connected Successfully as ${sock.user.id}`))
-            try {
-                await sock.sendMessage(sock.user.id, {
-                    text: `🤖 *Arslan-MD Bot Activated!*\n\n✅ Time: ${new Date().toLocaleString()}\n📢 Join Channel:\nhttps://whatsapp.com/channel/0029VarfjW04tRrmwfb8x306`
-                })
-                console.log(chalk.cyan("Startup message sent successfully."))
-            } catch (error) {
-                console.log(chalk.red("❌ Socket not ready. Skipping startup message."))
-            }
+            setTimeout(async () => {
+                try {
+                    await sock.sendMessage(sock.user.id, {
+                        text: `🤖 *Arslan-MD Bot Activated!*\n\n✅ Time: ${new Date().toLocaleString()}\n📢 Join Channel:\nhttps://whatsapp.com/channel/0029VarfjW04tRrmwfb8x306`
+                    })
+                    console.log(chalk.cyan("Startup message sent successfully."))
+                } catch (error) {
+                    console.log(chalk.red("❌ Socket not ready. Skipping startup message."))
+                }
+            }, 5000)  // 5 seconds delay
         }
         if (connection === "close") {
             console.log(chalk.yellow("🔄 Reconnecting..."))
-            if(lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut) {
+            if (lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut) {
                 startBot()
             } else {
                 console.log(chalk.red("Logged out from WhatsApp, please reauthenticate!"))
