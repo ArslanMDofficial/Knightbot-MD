@@ -3,16 +3,14 @@ const fs = require('fs');
 const path = require('path');
 
 async function helpCommand(sock, chatId, message) {
-    try {
-        const ytLink = global.ytch || 'https://youtube.com/@ArslanMD';
-        const helpMessage = `
-🤖 *${settings.botName || 'Arslan-MD'}*
-📦 *Version:* ${settings.version || '2.0.2'}
-👤 *Owner:* ${settings.botOwner || 'ArslanMD Official'}
-📺 *YouTube:* ${ytLink}
-
+    const helpMessage = `
+╔═══════════════╗
+║ ➤ 🤖 *${settings.botName || 'Arslan-MD'}*
+║ ➤ *Version:* ${settings.version || '2.0.2'}
+║ ➤ *By:* ${settings.botOwner || 'ArslanMD Official'}
+║ ➤ *YT:* ${global.ytch || 'youtube.com/@ArslanMD'}
+╚═══════════════╝
 📜 *Available Commands*
-
 🌐 *General Commands:*
 • .help / .menu
 • .ping
@@ -111,9 +109,17 @@ async function helpCommand(sock, chatId, message) {
 
 💻 *GitHub:*
 • .git / .github / .sc / .repo / .script
-        `.trim();
+`.trim();
+
+    try {
+        // ✅ Check if socket is connected before sending any message
+        if (!sock?.ws || sock.ws.readyState !== 1) {
+            console.error('❌ Socket not connected. Skipping help command.');
+            return;
+        }
 
         const imagePath = path.join(__dirname, '../assets/bot_image.jpg');
+
         if (fs.existsSync(imagePath)) {
             const imageBuffer = fs.readFileSync(imagePath);
             await sock.sendMessage(chatId, {
@@ -127,10 +133,14 @@ async function helpCommand(sock, chatId, message) {
         }
 
     } catch (error) {
-        console.error('❌ Error in help command:', error);
-        await sock.sendMessage(chatId, {
-            text: '⚠️ Help command failed. Please try again later.'
-        }, { quoted: message });
+        console.error('⚠️ Error in help command:', error);
+
+        // ✅ Send fallback message if socket is still alive
+        if (sock?.ws && sock.ws.readyState === 1) {
+            await sock.sendMessage(chatId, {
+                text: helpMessage
+            });
+        }
     }
 }
 
