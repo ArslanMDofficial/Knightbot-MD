@@ -7,7 +7,7 @@ const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLat
 const NodeCache = require('node-cache')
 const readline = require('readline')
 const PhoneNumber = require('awesome-phonenumber')
-const { handleMessages, handleGroupParticipantUpdate, handleStatus } = require('./main')
+const { handleMessages, handleGroupParticipantUpdate, handleStatus } = require('./main');
 const { smsg } = require('./lib/myfunc')
 
 let phoneNumber = "923237045919"
@@ -43,7 +43,6 @@ async function startBot() {
         msgRetryCounterCache
     })
 
-    // Message handling
     sock.ev.on('messages.upsert', async chatUpdate => {
         const mek = chatUpdate.messages[0]
         if (!mek.message) return
@@ -56,12 +55,14 @@ async function startBot() {
         }
     })
 
-    // Connection updates
     sock.ev.on('connection.update', async (update) => {
         const { connection, lastDisconnect } = update
+        console.log('Connection update:', connection)
+        if(lastDisconnect) {
+          console.log('Last disconnect reason:', lastDisconnect.error?.output?.statusCode, lastDisconnect.error?.message)
+        }
         if (connection === 'open') {
             console.log(chalk.green(`🤖 Bot Connected Successfully as ${sock.user.id}`))
-
             try {
                 await sock.sendMessage(sock.user.id, {
                     text: `🤖 *Arslan-MD Bot Activated!*\n\n✅ Time: ${new Date().toLocaleString()}\n📢 Join Channel:\nhttps://whatsapp.com/channel/0029VarfjW04tRrmwfb8x306`
@@ -71,21 +72,22 @@ async function startBot() {
                 console.log(chalk.red("❌ Socket not ready. Skipping startup message."))
             }
         }
-
-        if (connection === "close" && lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut) {
+        if (connection === "close") {
             console.log(chalk.yellow("🔄 Reconnecting..."))
-            startBot()
+            if(lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut) {
+                startBot()
+            } else {
+                console.log(chalk.red("Logged out from WhatsApp, please reauthenticate!"))
+            }
         }
     })
 
     sock.ev.on('creds.update', saveCreds)
 
-    // Group participant updates
     sock.ev.on('group-participants.update', async update => {
         await handleGroupParticipantUpdate(sock, update)
     })
 
-    // Status updates
     sock.ev.on('messages.upsert', async (m) => {
         if (m.messages[0].key?.remoteJid === 'status@broadcast') {
             await handleStatus(sock, m)
