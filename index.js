@@ -7,7 +7,7 @@ const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLat
 const NodeCache = require('node-cache')
 const readline = require('readline')
 const PhoneNumber = require('awesome-phonenumber')
-const { handleMessages, handleGroupParticipantUpdate, handleStatus } = require('./main');
+const { handleMessages, handleGroupParticipantUpdate, handleStatus } = require('./main')
 const { smsg } = require('./lib/myfunc')
 
 let phoneNumber = "923237045919"
@@ -43,6 +43,7 @@ async function startBot() {
         msgRetryCounterCache
     })
 
+    // Message handling
     sock.ev.on('messages.upsert', async chatUpdate => {
         const mek = chatUpdate.messages[0]
         if (!mek.message) return
@@ -55,41 +56,36 @@ async function startBot() {
         }
     })
 
-    sock.ev.on('connection.update', async (s) => {
-        const { connection, lastDisconnect } = s
+    // Connection updates
+    sock.ev.on('connection.update', async (update) => {
+        const { connection, lastDisconnect } = update
         if (connection === 'open') {
             console.log(chalk.green(`🤖 Bot Connected Successfully as ${sock.user.id}`))
 
-            const botNumber = sock.user.id.split(':')[0] + '@s.whatsapp.net';
-
-            // ✅ Check connection before sending message
-            if (sock?.ws && sock.ws.readyState === 1) {
-                await sock.sendMessage(botNumber, {
-                    text: `🤖 *Arslan-MD Bot Activated!*\n\n✅ Time: ${new Date().toLocaleString()}\n📢 Join Channel:\nhttps://whatsapp.com/channel/0029VarfjW04tRrmwfb8x306`,
-                    contextInfo: {
-                        forwardingScore: 999,
-                        isForwarded: true,
-                    }
+            try {
+                await sock.sendMessage(sock.user.id, {
+                    text: `🤖 *Arslan-MD Bot Activated!*\n\n✅ Time: ${new Date().toLocaleString()}\n📢 Join Channel:\nhttps://whatsapp.com/channel/0029VarfjW04tRrmwfb8x306`
                 })
-            } else {
-                console.error('❌ Socket not ready. Skipping startup message.')
+                console.log(chalk.cyan("Startup message sent successfully."))
+            } catch (error) {
+                console.log(chalk.red("❌ Socket not ready. Skipping startup message."))
             }
-
-            console.log(chalk.cyan(`🌐 Channel: https://whatsapp.com/channel/0029VarfjW04tRrmwfb8x306`))
         }
 
-        if (connection === "close" && lastDisconnect?.error?.output?.statusCode !== 401) {
-            console.log("🔄 Reconnecting...")
+        if (connection === "close" && lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut) {
+            console.log(chalk.yellow("🔄 Reconnecting..."))
             startBot()
         }
     })
 
     sock.ev.on('creds.update', saveCreds)
 
+    // Group participant updates
     sock.ev.on('group-participants.update', async update => {
         await handleGroupParticipantUpdate(sock, update)
     })
 
+    // Status updates
     sock.ev.on('messages.upsert', async (m) => {
         if (m.messages[0].key?.remoteJid === 'status@broadcast') {
             await handleStatus(sock, m)
