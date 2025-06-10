@@ -2,18 +2,22 @@ const settings = require('../settings');
 const fs = require('fs');
 const path = require('path');
 
+// ✅ Socket check helper
+function isSocketOpen(sock) {
+    return sock && sock.ws && sock.ws.readyState === 1;
+}
+
 async function helpCommand(sock, chatId, message) {
-    const helpMessage = `...`.trim(); // 👈 keep your command list here
+    const helpMessage = `📜 *Help Menu*\n...`; // (Your full command list here)
 
     try {
-        // ✅ Better connection check
-        if (!sock || sock?.ev?.buffer == null || sock?.ws?.readyState !== 1) {
-            console.error('❌ Socket not connected. Skipping help command.');
+        // ✅ Prevent crash if socket is closed
+        if (!isSocketOpen(sock)) {
+            console.error('❌ Socket is not open. Skipping help command.');
             return;
         }
 
         const imagePath = path.join(__dirname, '../assets/bot_image.jpg');
-
         const quotedMsg = message?.key ? message : undefined;
 
         if (fs.existsSync(imagePath)) {
@@ -31,8 +35,7 @@ async function helpCommand(sock, chatId, message) {
     } catch (error) {
         console.error('⚠️ Error in help command:', error);
 
-        // 🛡️ Send fallback message only if socket still open
-        if (sock?.ws?.readyState === 1) {
+        if (isSocketOpen(sock)) {
             await sock.sendMessage(chatId, {
                 text: helpMessage
             });
