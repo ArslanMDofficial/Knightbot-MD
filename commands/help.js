@@ -3,161 +3,117 @@ const fs = require('fs');
 const path = require('path');
 
 async function helpCommand(sock, chatId, message) {
-    const helpMessage = `
-╔═══════════════╗
-║ ➤ 🤖 *${settings.botName || 'Arslan-MD'}*
-║ ➤ *Version:* ${settings.version || '2.0.2'}
-║ ➤ *By:* ${settings.botOwner || 'ArslanMD Official'}
-║ ➤ *YT:* ${global.ytch || 'youtube.com/@ArslanMD'}
-╚═══════════════╝
+    try {
+        const ytLink = global.ytch || 'https://youtube.com/@ArslanMD';
+        const helpMessage = `
+🤖 *${settings.botName || 'Arslan-MD'}*
+📦 *Version:* ${settings.version || '2.0.2'}
+👤 *Owner:* ${settings.botOwner || 'ArslanMD Official'}
+📺 *YouTube:* ${ytLink}
 
 📜 *Available Commands*
 
-╔═══════════════╗
-🌐 *General Commands*:
-║ ➤ .help or .menu
-║ ➤ .ping
-║ ➤ .alive
-║ ➤ .tts <text>
-║ ➤ .owner
-║ ➤ .joke
-║ ➤ .quote
-║ ➤ .fact
-║ ➤ .weather <city>
-║ ➤ .news
-║ ➤ .attp <text>
-║ ➤ .lyrics <song_title>
-║ ➤ .8ball <question>
-║ ➤ .groupinfo
-║ ➤ .staff or .admins 
-║ ➤ .vv
-║ ➤ .trt <text> <lang>
-║ ➤ .ss <link>
-║ ➤ .jid
-╚═══════════════╝ 
+🌐 *General Commands:*
+• .help / .menu
+• .ping
+• .alive
+• .tts <text>
+• .owner
+• .joke
+• .quote
+• .fact
+• .weather <city>
+• .news
+• .attp <text>
+• .lyrics <song_title>
+• .8ball <question>
+• .groupinfo
+• .staff / .admins 
+• .vv
+• .trt <text> <lang>
+• .ss <link>
+• .jid
 
-╔═══════════════╗
-👮‍♂️ *Admin Commands*:
-║ ➤ .ban @user
-║ ➤ .promote @user
-║ ➤ .demote @user
-║ ➤ .mute <minutes>
-║ ➤ .unmute
-║ ➤ .delete or .del
-║ ➤ .kick @user
-║ ➤ .warnings @user
-║ ➤ .warn @user
-║ ➤ .antilink
-║ ➤ .antibadword
-║ ➤ .clear
-║ ➤ .tag <message>
-║ ➤ .tagall
-║ ➤ .chatbot
-║ ➤ .resetlink
-║ ➤ .welcome <on/off>
-║ ➤ .goodbye <on/off>
-╚═══════════════╝
+👮 *Admin Commands:*
+• .ban @user
+• .promote @user
+• .demote @user
+• .mute <min>
+• .unmute
+• .delete
+• .kick @user
+• .warn @user
+• .warnings @user
+• .antilink
+• .antibadword
+• .clear
+• .tag <msg>
+• .tagall
+• .chatbot
+• .resetlink
+• .welcome on/off
+• .goodbye on/off
 
-╔═══════════════╗
-🔒 *Owner Commands*:
-║ ➤ .mode
-║ ➤ .autostatus
-║ ➤ .clearsession
-║ ➤ .antidelete
-║ ➤ .cleartmp
-║ ➤ .setpp <reply to image>
-║ ➤ .autoreact
-╚═══════════════╝
+🔒 *Owner Commands:*
+• .mode
+• .autostatus
+• .clearsession
+• .antidelete
+• .cleartmp
+• .setpp (reply to image)
+• .autoreact
 
-╔═══════════════╗
-🎨 *Image/Sticker Commands*:
-║ ➤ .blur <image>
-║ ➤ .simage <reply to sticker>
-║ ➤ .sticker <reply to image>
-║ ➤ .tgsticker <Link>
-║ ➤ .meme
-║ ➤ .take <packname> 
-║ ➤ .emojimix <emj1>+<emj2>
-╚═══════════════╝  
+🎨 *Image/Sticker:*
+• .blur <image>
+• .simage
+• .sticker
+• .tgsticker <link>
+• .meme
+• .take <packname>
+• .emojimix 😊+🔥
 
-╔═══════════════╗
-🎮 *Game Commands*:
-║ ➤ .tictactoe @user
-║ ➤ .hangman
-║ ➤ .guess <letter>
-║ ➤ .trivia
-║ ➤ .answer <answer>
-║ ➤ .truth
-║ ➤ .dare
-╚═══════════════╝
+🎮 *Games:*
+• .tictactoe @user
+• .hangman
+• .guess <letter>
+• .trivia
+• .answer <ans>
+• .truth / .dare
 
-╔═══════════════╗
-🤖 *AI Commands*:
-║ ➤ .gpt <question>
-║ ➤ .gemini <question>
-║ ➤ .imagine <prompt>
-║ ➤ .flux <prompt>
-╚═══════════════╝
+🤖 *AI Commands:*
+• .gpt <question>
+• .gemini <question>
+• .imagine <prompt>
+• .flux <prompt>
 
-╔═══════════════╗
-🎯 *Fun Commands*:
-║ ➤ .compliment @user
-║ ➤ .insult @user
-║ ➤ .flirt 
-║ ➤ .shayari
-║ ➤ .goodnight
-║ ➤ .roseday
-║ ➤ .character @user
-║ ➤ .wasted @user
-║ ➤ .ship @user
-║ ➤ .simp @user
-║ ➤ .stupid @user [text]
-╚═══════════════╝
+🎯 *Fun Commands:*
+• .compliment @user
+• .insult @user
+• .flirt
+• .shayari
+• .roseday
+• .goodnight
+• .character @user
+• .ship @user
+• .simp @user
+• .wasted @user
+• .stupid @user <text>
 
-╔═══════════════╗
-🔤 *Textmaker*:
-║ ➤ .metallic <text>
-║ ➤ .ice <text>
-║ ➤ .snow <text>
-║ ➤ .impressive <text>
-║ ➤ .matrix <text>
-║ ➤ .light <text>
-║ ➤ .neon <text>
-║ ➤ .devil <text>
-║ ➤ .purple <text>
-║ ➤ .thunder <text>
-║ ➤ .leaves <text>
-║ ➤ .1917 <text>
-║ ➤ .arena <text>
-║ ➤ .hacker <text>
-║ ➤ .sand <text>
-║ ➤ .blackpink <text>
-║ ➤ .glitch <text>
-║ ➤ .fire <text>
-╚═══════════════╝
+🖋️ *Textmaker:*
+• .metallic <text>
+• .snow / .neon / .fire / .devil ...
+• .hacker / .1917 / .glitch / .leaves ...
 
-╔═══════════════╗
-📥 *Downloader*:
-║ ➤ .play <song_name>
-║ ➤ .song <song_name>
-║ ➤ .instagram <link>
-║ ➤ .facebook <link>
-║ ➤ .tiktok <link>
-╚═══════════════╝
+📥 *Downloader:*
+• .play <song>
+• .song <name>
+• .instagram / .facebook / .tiktok <link>
 
-╔═══════════════╗
-💻 *Github Commands:*
-║ ➤ .git
-║ ➤ .github
-║ ➤ .sc
-║ ➤ .script
-║ ➤ .repo
-╚═══════════════╝
-`.trim();
+💻 *GitHub:*
+• .git / .github / .sc / .repo / .script
+        `.trim();
 
-    try {
         const imagePath = path.join(__dirname, '../assets/bot_image.jpg');
-
         if (fs.existsSync(imagePath)) {
             const imageBuffer = fs.readFileSync(imagePath);
             await sock.sendMessage(chatId, {
@@ -169,11 +125,12 @@ async function helpCommand(sock, chatId, message) {
                 text: helpMessage
             }, { quoted: message });
         }
+
     } catch (error) {
-        console.error('Error in help command:', error);
+        console.error('❌ Error in help command:', error);
         await sock.sendMessage(chatId, {
-            text: helpMessage
-        });
+            text: '⚠️ Help command failed. Please try again later.'
+        }, { quoted: message });
     }
 }
 
