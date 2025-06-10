@@ -8,7 +8,7 @@ async function helpCommand(sock, chatId, message) {
 ║ ➤ 🤖 *${settings.botName || 'Arslan-MD'}*
 ║ ➤ *Version:* ${settings.version || '2.0.2'}
 ║ ➤ *By:* ${settings.botOwner || 'ArslanMD Official'}
-║ ➤ *YT:* ${global.ytch || 'youtube.com/@arslanmdofficial'}
+║ ➤ *YT:* ${global.ytch || 'youtube.com/@ArslanMD'}
 ╚═══════════════╝
 
 📜 *Available Commands*
