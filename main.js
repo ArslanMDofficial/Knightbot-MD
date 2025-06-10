@@ -102,16 +102,12 @@ global.channelLink = "https://whatsapp.com/channel/0029VarfjW04tRrmwfb8x306";
 global.ytch = "arslanmdofficial";
 
 // Add this near the top of main.js with other global configurations
-const channelInfo = {
-    contextInfo: {
-        forwardingScore: 1,
-        isForwarded: true,
-        forwardedNewsletterMessageInfo: {
-            newsletterJid: '120363161513685998@newsletter',
-            newsletterName: 'Arslan-MD',
-            serverMessageId: -1
+else {
+            await sock.sendMessage(chatId, {
+                text: helpMessage
+            }, { quoted: message });
         }
-    }
+    } 
 };
 
 async function handleMessages(sock, messageUpdate, printLog) {
