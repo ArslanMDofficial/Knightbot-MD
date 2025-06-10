@@ -1,10 +1,17 @@
-const settings = require('../settings'); const fs = require('fs'); const path = require('path');
+const settings = require('../settings');
+const fs = require('fs');
+const path = require('path');
 
-async function helpCommand(sock, chatId, message) { const helpMessage = ` ╔═══════════════════╗ 🤖 ${settings.botName || 'Arslan-MD'}
-Version: ${settings.version || '2.0.2'}
-by ${settings.botOwner || 'ArslanMD Official'} YT : ${global.ytch || 'youtube.com/@ArslanMD'} ╚═══════════════════╝
+async function helpCommand(sock, chatId, message) {
+    const helpMessage = `
+╔═══════════════════╗
+🤖 *${settings.botName || 'Arslan-MD'}*
+*Version:* ${settings.version || '2.0.2'}
+*By:* ${settings.botOwner || 'ArslanMD Official'}
+*YT:* ${global.ytch || 'youtube.com/@ArslanMD'}
+╚═══════════════════╝
 
-Available Commands:
+📜 *Available Commands*
 
 ╔═══════════════════╗
 🌐 *General Commands*:
@@ -146,10 +153,9 @@ Available Commands:
 ║ ➤ .script
 ║ ➤ .repo
 ╚═══════════════════╝
+`.trim();
 
-;
-
-try {
+    try {
         const imagePath = path.join(__dirname, '../assets/bot_image.jpg');
 
         if (fs.existsSync(imagePath)) {
@@ -159,12 +165,15 @@ try {
                 caption: helpMessage
             }, { quoted: message });
         } else {
-            console.error('Bot image not found at:', imagePath);
-            await sock.sendMessage(chatId, { text: helpMessage }, { quoted: message });
+            await sock.sendMessage(chatId, {
+                text: helpMessage
+            }, { quoted: message });
         }
     } catch (error) {
         console.error('Error in help command:', error);
-        await sock.sendMessage(chatId, { text: helpMessage });
+        await sock.sendMessage(chatId, {
+            text: helpMessage
+        });
     }
 }
 
