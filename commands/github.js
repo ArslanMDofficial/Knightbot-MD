@@ -10,22 +10,23 @@ https://youtube.com/@arslanmdofficial
 _Star ⭐ the repository if you like the bot!_`;
 
     try {
-        await sock.sendMessage(chatId, {
-            text: repoInfo,
-            contextInfo: {
-                forwardingScore: 1,
-                isForwarded: true,
-                forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363161513685998@newsletter',
-                    newsletterName: 'Arslan-MD',
-                    serverMessageId: -1
-                }
-            }
-        });
+        const imagePath = path.join(__dirname, '../assets/bot_image.jpg');
+
+        if (fs.existsSync(imagePath)) {
+            const imageBuffer = fs.readFileSync(imagePath);
+            await sock.sendMessage(chatId, {
+                image: imageBuffer,
+                caption: helpMessage
+            }, { quoted: message });
+        } else {
+            await sock.sendMessage(chatId, {
+                text: helpMessage
+            }, { quoted: message });
+        }
     } catch (error) {
-        console.error('Error in github command:', error);
-        await sock.sendMessage(chatId, { 
-            text: '❌ Error fetching repository information.' 
+        console.error('Error in help command:', error);
+        await sock.sendMessage(chatId, {
+            text: helpMessage
         });
     }
 }
