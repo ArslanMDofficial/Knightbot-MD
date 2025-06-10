@@ -146,7 +146,9 @@ Available Commands:
 ║ ➤ .script
 ║ ➤ .repo
 ╚═══════════════════╝
+
 ;
+
 try {
         const imagePath = path.join(__dirname, '../assets/bot_image.jpg');
 
