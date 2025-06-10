@@ -4,12 +4,12 @@ const path = require('path');
 
 async function helpCommand(sock, chatId, message) {
     const helpMessage = `
-╔═══════════════════╗
-🤖 *${settings.botName || 'Arslan-MD'}*
-*Version:* ${settings.version || '2.0.2'}
-*By:* ${settings.botOwner || 'ArslanMD Official'}
-*YT:* ${global.ytch || 'youtube.com/@ArslanMD'}
-╚═══════════════════╝
+╔═══════════════╗
+║ ➤ 🤖 *${settings.botName || 'Arslan-MD'}*
+║ ➤ *Version:* ${settings.version || '2.0.2'}
+║ ➤ *By:* ${settings.botOwner || 'ArslanMD Official'}
+║ ➤ *YT:* ${global.ytch || 'youtube.com/@arslanmdofficial'}
+╚═══════════════╝
 
 📜 *Available Commands*
 
